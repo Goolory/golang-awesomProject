@@ -12,7 +12,7 @@ import (
 
 	"awesomeProject/cmn"
 	"awesomeProject/middleware"
-	"awesomeProject/pro-pkg/logger"
+	"awesomeProject/tool/logger"
 )
 
 func main() {
