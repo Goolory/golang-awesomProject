@@ -27,7 +27,7 @@ func UserRegisterHandler(c *gin.Context) {
 
 	db := c.MustGet(constant.ContextDb).(*gorm.DB)
 	var userP dbmodel.User
-	userP.Username = p.Username
+	userP.Username.String = p.Username
 	userP.Password = p.Password
 
 	if err := db.Create(&userP).Error; err != nil {

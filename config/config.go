@@ -8,6 +8,7 @@ import (
 type config struct {
 	DBName   string `json:"db_name"`
 	DBSource string `json:"db_source"`
+	EnableOrmLog bool `json:"enable_orm_log"`
 }
 
 var c config
@@ -37,4 +38,8 @@ func GetDBName() string {
 
 func GetDBSource() string {
 	return c.DBSource
+}
+
+func IsOrmLogEnabled() bool {
+	return c.EnableOrmLog
 }

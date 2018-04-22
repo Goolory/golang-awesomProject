@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"awesomeProject/tool/logger"
 )
 
 var db *gorm.DB
@@ -17,15 +18,15 @@ func DbPrepareHandler(c *gin.Context) {
 		var err error
 		db, err = gorm.Open(config.GetDBName(), config.GetDBSource())
 		if err != nil {
-			println("Unable to connect to db (middleware db.go)", err)
+			logger.Error("Unable to connect to db (middleware db.go)", err)
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-		//if config.IsOrmLogEnabled() {
-		//	db.LogMode(true)
-		//} else {
-		//	db.LogMode(false)
-		//}
+		if config.IsOrmLogEnabled() {
+			db.LogMode(true)
+		} else {
+			db.LogMode(false)
+		}
 	}
 	c.Set(constant.ContextDb, db)
 	c.Next()

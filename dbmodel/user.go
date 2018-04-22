@@ -1,26 +1,20 @@
 package dbmodel
 
 import (
-	"awesomeProject/tool/uuid"
 	"github.com/jinzhu/gorm"
 )
 
 type User struct {
-	Id       []byte `gorm:"id"`
-	Username string `gorm:"username"`
-	Password string `gorm:"password"`
+	Id       []byte `gorm:"primary_key;auto_increment" json:"id"`
+	ClassId []byte	`json:"class_id"`
+	Username NullString `gorm:"size:64" json:"username"`
+	Password string `gorm:"size:64" json:"password"`
 }
 
 func (User) TableName() string {
 	return "user"
 }
 
-func (f *User) BeforeCreate(scorpe *gorm.Scope) error {
-	if f.Id == nil {
-		scorpe.SetColumn("Id", ([]byte)(uuid.NewFastUUID()))
-	}
-	return nil
-}
 
 func InitUser(db *gorm.DB) error {
 	var err error
