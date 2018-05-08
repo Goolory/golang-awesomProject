@@ -6,7 +6,7 @@ import (
 )
 
 type File struct {
-	Id        uint64    `gorm:"primary_key;auto_increment" json:"id"`
+	Id        uint32    `gorm:"primary_key;auto_increment" json:"id"`
 	RelPath   string    `gorm:"size:255" json:"rel_path"`
 	Filename  string    `gorm:"size:128" json:"filename"`
 	Filesize  int64     `json:"filesize"`

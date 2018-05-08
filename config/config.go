@@ -6,9 +6,9 @@ import (
 )
 
 type config struct {
-	DBName   string `json:"db_name"`
-	DBSource string `json:"db_source"`
-	EnableOrmLog bool `json:"enable_orm_log"`
+	DBName       string `json:"db_name"`
+	DBSource     string `json:"db_source"`
+	EnableOrmLog bool   `json:"enable_orm_log"`
 }
 
 var c config

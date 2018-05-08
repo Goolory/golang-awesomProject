@@ -5,16 +5,15 @@ import (
 )
 
 type User struct {
-	Id       []byte `gorm:"primary_key;auto_increment" json:"id"`
-	ClassId []byte	`json:"class_id"`
+	Id       uint32     `gorm:"primary_key;auto_increment" json:"id"`
+	ClassId  uint32     `json:"class_id"`
 	Username NullString `gorm:"size:64" json:"username"`
-	Password string `gorm:"size:64" json:"password"`
+	Password string     `gorm:"size:64" json:"password"`
 }
 
 func (User) TableName() string {
 	return "user"
 }
-
 
 func InitUser(db *gorm.DB) error {
 	var err error

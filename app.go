@@ -46,17 +46,23 @@ func main() {
 
 	Api := r.Group("cmn").Use(middleware.CorsAllowHandler)
 	Api.OPTIONS("/*f", middleware.CorsAllowHandler)
-	Api.GET("/home", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "ping"})
-	})
 
 	Api.Use(middleware.DbPrepareHandler)
 	{
+		Api.POST("/admin/login", cmn.AdminLoginHandler)
+		Api.POST("/admin/register", cmn.AdminRegisterHandler)
 		Api.POST("user/register", cmn.UserRegisterHandler)
 
 		//上传文件
 
 		Api.POST("fileupload", cmn.FileUploadHandler)
+	}
+	Api.Use(middleware.AdminVerifyHandler)
+	{
+		Api.GET("/admin/info", cmn.AdminInfoHandler)
+		Api.POST("/admin/teacher/add", cmn.AdminTeacherAddHandler)
+		Api.GET("/admin/teacher/list", cmn.AdminTeacherListHandler)
+		Api.POST("/admin/teacher/delete", cmn.AdminTeacherDelHandler)
 	}
 
 	r.NoRoute(cmn.FileServeHandler)

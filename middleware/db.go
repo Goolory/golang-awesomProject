@@ -6,9 +6,9 @@ import (
 	"awesomeProject/config"
 	"awesomeProject/constant"
 
+	"awesomeProject/tool/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"awesomeProject/tool/logger"
 )
 
 var db *gorm.DB
