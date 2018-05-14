@@ -130,7 +130,7 @@ func AdminLoginHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"access_token": token.AccessToken}})
 }
 
-func AdminInfoHandler(c *gin.Context)  {
+func AdminInfoHandler(c *gin.Context) {
 	admin := c.MustGet(constant.ContextAdmin).(dbmodel.Admin)
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"admin_name": admin.Username}})
 }

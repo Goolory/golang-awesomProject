@@ -39,6 +39,28 @@ func InitDbModel(db *gorm.DB) {
 		logger.Error(err)
 		return
 	}
+	err = InitTest(db)
+	if err != nil {
+		logger.Error(err)
+	}
+
+	err = InitComment(db)
+	if err != nil {
+		logger.Error(err)
+	}
+	err = initHomework(db)
+	if err != nil {
+		logger.Error(err)
+	}
+	err = InitQuestion(db)
+	if err != nil {
+		logger.Error(err)
+	}
+
+	err = InitAnswer(db)
+	if err != nil {
+		logger.Error(err)
+	}
 
 }
 
@@ -48,4 +70,9 @@ func RebuildDbModel(db *gorm.DB) {
 	DropTableFile(db)
 	DropTableToken(db)
 	DropTableTeacher(db)
+	DropTableTest(db)
+	DropTableComment(db)
+	DropTableHomework(db)
+	DropTableQuestion(db)
+	DropTableAnswer(db)
 }

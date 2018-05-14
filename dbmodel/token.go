@@ -13,8 +13,8 @@ type Token struct {
 	RefreshToken string    `gorm:"size:128" json:"refresh_token"`
 	Disabled     bool      `json:"disabled"`
 	//AccessAt     time.Time `json:"access_at"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (Token) TableName() string {

@@ -2,12 +2,15 @@ package dbmodel
 
 import (
 	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type Class struct {
-	Id        uint32     `gorm:"primary_key; auto_increment" json:"id"`
+	Id        uint32     `gorm:"primary_key;auto_increment" json:"id"`
 	ClassName NullString `gorm:"size:64" json:"class_name"`
-	TeacherId  uint32 `json:"teacher_id"`
+	TeacherId uint32     `json:"teacher_id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
 }
 
 func (Class) TableName() string {

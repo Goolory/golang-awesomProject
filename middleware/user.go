@@ -1,14 +1,14 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
 	"awesomeProject/constant"
-	"github.com/jinzhu/gorm"
-	"strings"
-	"strconv"
-	"awesomeProject/tool/logger"
 	"awesomeProject/dbmodel"
+	"awesomeProject/tool/logger"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 func getAdminIdFromToken(c *gin.Context, db *gorm.DB) uint32 {
@@ -43,6 +43,7 @@ func getAdminIdFromToken(c *gin.Context, db *gorm.DB) uint32 {
 	}
 	return 0
 }
+
 //func getAdminIdFromCookie(c *gin.Context, db *gorm.DB) uint32 {
 //	v := cookie.GetVal(constant.CookieUserId, c.Request)
 //	if v == nil {
@@ -72,7 +73,6 @@ func getAdminIdFromToken(c *gin.Context, db *gorm.DB) uint32 {
 //	return 0
 //}
 
-
 func getAdminId(c *gin.Context, db *gorm.DB) uint32 {
 	adminId := getAdminIdFromToken(c, db)
 	//if adminId == 0 {
@@ -81,7 +81,7 @@ func getAdminId(c *gin.Context, db *gorm.DB) uint32 {
 	return adminId
 }
 
-func AdminVerifyHandler(c *gin.Context)  {
+func AdminVerifyHandler(c *gin.Context) {
 	db := c.MustGet(constant.ContextDb).(*gorm.DB)
 	adminId := getAdminId(c, db)
 	if adminId == 0 {

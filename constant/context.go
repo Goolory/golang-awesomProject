@@ -1,6 +1,8 @@
 package constant
 
 const (
-	ContextDb = "db"
-	ContextAdmin = "admin"
+	ContextDb      = "db"
+	ContextAdmin   = "admin"
+	ContextTeacher = "teacher"
+	ContextStudent = "student"
 )

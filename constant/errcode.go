@@ -7,24 +7,24 @@ import (
 )
 
 const (
-	Success = 0
+	Success      = 0
 	BadParameter = 2
 
-	UserNotFound  = 1000
-	WrongPassword = 1001
+	UserNotFound      = 1000
+	WrongPassword     = 1001
 	UserAlreadyExists = 1002
 
 	StatusInternalServerError = 500
 )
 
 var errCodeText = map[int]string{
-	Success: "Success",
+	Success:      "Success",
 	BadParameter: "Bad Parameter",
 
 	UserNotFound:              "User Not Found",
 	StatusInternalServerError: "Internal Server Error",
 	WrongPassword:             "Wrong Password",
-	UserAlreadyExists: "User Already Exists",
+	UserAlreadyExists:         "User Already Exists",
 }
 
 func ErrCodeText(code int) string {

@@ -5,20 +5,19 @@ import (
 	"time"
 )
 
-
-
 type Teacher struct {
-	Id        uint32     `gorm:"primary_key; auto_increment" json:"id"`
-	TeacherNo string `gorm:"size 225" json:"teacher_no"`
+	Id          uint32     `gorm:"primary_key; auto_increment" json:"id"`
+	TeacherNo   string     `gorm:"size 225" json:"teacher_no"`
 	TeacherName NullString `gorm:"size:64" json:"teacher_name"`
-	Password string     `gorm:"size:64" json:"password"`
-	Type uint32 `json:"type"` //教授1 讲师2
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	Password    string     `gorm:"size:64" json:"password"`
+	Type        uint32     `json:"type"` //教授1 讲师2
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
 }
+
 const (
 	Professor = (1 << 0)
-	Lecturer = (1 << 1)
+	Lecturer  = (1 << 1)
 )
 
 func (Teacher) TableName() string {

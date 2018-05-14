@@ -1,21 +1,87 @@
 package cmn
 
 import (
-	"github.com/gin-gonic/gin"
-	"awesomeProject/tool/logger"
 	"awesomeProject/constant"
-	"github.com/jinzhu/gorm"
 	"awesomeProject/dbmodel"
+	"awesomeProject/tool/logger"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"net/http"
-	//"strings"
 )
 
-func deleteTeacher(db *gorm.DB, id uint32) error{
+func AdminTeacherAllHandler(c *gin.Context) {
+	var teachers []*dbmodel.Teacher
+	db := c.MustGet(constant.ContextDb).(*gorm.DB)
+	if err := db.Find(&teachers).Error; err != nil {
+		logger.Error(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"teachers": teachers}})
+
+}
+
+func AdminTeacherUpdateHandler(c *gin.Context) {
+	type param struct {
+		Id          uint32 `json:"id"`
+		TeacherNo   string `json:"teacher_no"`
+		TeacherName string `json:"teacher_name"`
+		Password    string `json:"password"`
+		Type        uint32 `json:"type"`
+	}
+
+	var p param
+	if err := c.Bind(&p); err != nil {
+		logger.Info("Invalid request param", err)
+		return
+	}
+	logger.Debug(p.Id)
+	var teacher dbmodel.Teacher
+	db := c.MustGet(constant.ContextDb).(*gorm.DB)
+	if err := db.First(&teacher, p.Id).Error; err != nil {
+		logger.Error(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	teacher.TeacherName.String = p.TeacherName
+	teacher.TeacherNo = p.TeacherNo
+	teacher.Password = p.Password
+	teacher.Type = p.Type
+
+	if err := db.Save(&teacher).Error; err != nil {
+		logger.Error(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success})
+
+}
+
+func AdminTeacherInfoHandler(c *gin.Context) {
+	type param struct {
+		Id uint32 `form:"id"`
+	}
+	var p param
+	if err := c.Bind(&p); err != nil {
+		logger.Info("Invalid request param", err)
+		return
+	}
+	db := c.MustGet(constant.ContextDb).(*gorm.DB)
+	var teacher dbmodel.Teacher
+	if err := db.First(&teacher, p.Id).Error; err != nil {
+		logger.Error(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"teacher": teacher}})
+}
+
+func deleteTeacher(db *gorm.DB, id uint32) error {
 	if err := db.Where("id = ?", id).Delete(&dbmodel.Teacher{}).Error; err != nil {
 		logger.Error(err)
 		return err
 	} else {
-		return  nil
+		return nil
 	}
 }
 
@@ -28,25 +94,36 @@ func AdminTeacherDelHandler(c *gin.Context) {
 		logger.Info("Invalid request param ", err)
 		return
 	}
-	logger.Debug(p.Ids)
 	db := c.MustGet(constant.ContextDb).(*gorm.DB)
+	tx := db.Begin() //数据库事务
 	if len(p.Ids) > 0 {
-		for i := 0; i<len(p.Ids); i++ {
-			if err := deleteTeacher(db, p.Ids[i]); err != nil {
+		for i := 0; i < len(p.Ids); i++ {
+			if err := deleteTeacher(tx, p.Ids[i]); err != nil {
 				logger.Error(err)
 				c.AbortWithStatus(http.StatusInternalServerError)
 				return
 			}
+
+			if err := tx.Model(&dbmodel.Class{}).Where("teacher_id=?", p.Ids[i]).Update("teacher_id", 0).Error; err != nil {
+				logger.Error(err)
+				return
+			}
 		}
 	}
+	if err := tx.Commit().Error; err != nil { //提交数据库事务
+		logger.Error(err)
+		return
+	}
+
+	tx = nil
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success})
 }
 
-func AdminTeacherListHandler(c *gin.Context)  {
+func AdminTeacherListHandler(c *gin.Context) {
 	type param struct {
 		TeacherName string `form:"teacher_name"`
-		Page uint32 `form:"page"`
-		PageSize uint32 `form:"page_size"`
+		Page        uint32 `form:"page"`
+		PageSize    uint32 `form:"page_size"`
 	}
 	var p param
 	if err := c.Bind(&p); err != nil {
@@ -86,12 +163,12 @@ func AdminTeacherListHandler(c *gin.Context)  {
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"teachers": teachers, "total": count}})
 }
 
-func AdminTeacherAddHandler(c *gin.Context)  {
+func AdminTeacherAddHandler(c *gin.Context) {
 	type param struct {
-		TeacherNo string `json:"teacher_no"`
+		TeacherNo   string `json:"teacher_no"`
 		TeacherName string `json:"teacher_name"`
-		Password string `json:"password"`
-		Type uint32 `json:"type"`
+		Password    string `json:"password"`
+		Type        uint32 `json:"type"`
 	}
 	var p param
 	if err := c.BindJSON(&p); err != nil {
@@ -99,7 +176,7 @@ func AdminTeacherAddHandler(c *gin.Context)  {
 		return
 	}
 
-	if p.TeacherNo == "" || p.TeacherName == "" || p.Password == "" || p.Type == 0{
+	if p.TeacherNo == "" || p.TeacherName == "" || p.Password == "" || p.Type == 0 {
 		constant.ErrMsg(c, constant.BadParameter)
 		return
 	}
@@ -119,7 +196,7 @@ func AdminTeacherAddHandler(c *gin.Context)  {
 				logger.Error(errCreate)
 				return
 			}
- 		} else {
+		} else {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
@@ -128,5 +205,5 @@ func AdminTeacherAddHandler(c *gin.Context)  {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success})
-	
+
 }
