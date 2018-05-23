@@ -71,7 +71,6 @@ func main() {
 		Api.POST("fileupdate", cmn.FileUpdateHandler)
 		Api.GET("getfiles", cmn.FileGetHandler)
 
-
 	}
 	Api.Use(middleware.AdminVerifyHandler)
 	{
@@ -122,7 +121,6 @@ func main() {
 		Tapi.GET("/teacher/question/list", cmn.TeacherQuestionListHandler)
 		Tapi.GET("/teacher/answer/list", cmn.TeacherAnswerListHandler)
 
-
 	}
 
 	Sapi.Use(middleware.DbPrepareHandler)
@@ -141,8 +139,6 @@ func main() {
 		Sapi.POST("/student/homework/add", cmn.StudentHomeworkAddHandler)
 		Sapi.POST("/student/answer/add", cmn.StudentAnswerAddHandler)
 		Sapi.GET("/student/question/list", cmn.StudentQuestionListHandler)
-
-
 
 	}
 

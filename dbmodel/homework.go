@@ -9,7 +9,7 @@ type Homework struct {
 	Id        uint32    `gorm:"primary_key;auto_increment" json:"id"`
 	ParentId  uint32    `json:"parent_id"`
 	UserId    uint32    `json:"user_id"`
-	FilePath string `json:"file_path"`
+	FilePath  string    `json:"file_path"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

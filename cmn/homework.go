@@ -1,22 +1,22 @@
 package cmn
 
 import (
-	"github.com/gin-gonic/gin"
 	"awesomeProject/constant"
 	"awesomeProject/dbmodel"
 	"awesomeProject/tool/logger"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"net/http"
 )
 
 type homeworkList struct {
 	dbmodel.Homework
-	Title string `json:"title"`
+	Title       string `json:"title"`
 	StudentName string `json:"student_name"`
-	ClassName string`json:"class_name"`
+	ClassName   string `json:"class_name"`
 }
 
-func TeacherHomeworkListHandler(c *gin.Context)  {
+func TeacherHomeworkListHandler(c *gin.Context) {
 	type param struct {
 		Page     uint32 `form:"page"`
 		PageSize uint32 `form:"page_size"`
@@ -36,8 +36,8 @@ func TeacherHomeworkListHandler(c *gin.Context)  {
 	count := 0
 
 	sql := db.Where("1=1")
-	if err := sql.Table("homework as h").Joins("left join test as t on t.id = h.parent_id " +
-		"left join student_class_teacher as u on u.id = h.user_id").Select("" +
+	if err := sql.Table("homework as h").Joins("left join test as t on t.id = h.parent_id "+
+		"left join student_class_teacher as u on u.id = h.user_id").Select(""+
 		"h.*, t.title, u.username as student_name, u.class_name").Where("u.teacher_id = ?", teacher.Id).Count(&count).Error; err != nil {
 		logger.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -52,16 +52,16 @@ func TeacherHomeworkListHandler(c *gin.Context)  {
 		sql = sql.Limit(int(p.PageSize))
 	}
 	var hList []homeworkList
-	if err := sql.Table("homework as h").Joins("left join test as t on t.id = h.parent_id left join student_class_teacher as u on u.id = h.user_id").Select("" +
+	if err := sql.Table("homework as h").Joins("left join test as t on t.id = h.parent_id left join student_class_teacher as u on u.id = h.user_id").Select(""+
 		"h.*, t.title, u.username as student_name, u.class_name").Where("u.teacher_id = ?", teacher.Id).Scan(&hList).Error; err != nil {
 		logger.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": hList, "count":count})
+	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": hList, "count": count})
 }
 
-func StudentHomeworkAddHandler(c *gin.Context)  {
+func StudentHomeworkAddHandler(c *gin.Context) {
 	type param struct {
 		ParentId uint32 `json:"parent_id"`
 		FilePath string `json:"file_path"`

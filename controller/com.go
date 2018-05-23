@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	"strings"
-	"strconv"
 	"awesomeProject/dbmodel"
 	"awesomeProject/tool/logger"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"strconv"
+	"strings"
 )
 
 func getAdminIdFromToken(c *gin.Context, db *gorm.DB) uint32 {

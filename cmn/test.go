@@ -32,9 +32,9 @@ func TeacherTestDelHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success})
 }
 
-func TeacherTestUpdateHandler(c *gin.Context)  {
+func TeacherTestUpdateHandler(c *gin.Context) {
 	type param struct {
-		Id        uint32 `json:"id"`
+		Id uint32 `json:"id"`
 	}
 	var p param
 	if err := c.Bind(&p); err != nil {
@@ -181,14 +181,11 @@ func TeacherTestAddHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "test_id": test.Id})
 }
 
-
-
-
 func StudentTestListHandler(c *gin.Context) {
 	type param struct {
 		//StudentId uint32 `form:"student_id"`
-		Page      uint32 `form:"page"`
-		PageSize  uint32 `form:"page_size"`
+		Page     uint32 `form:"page"`
+		PageSize uint32 `form:"page_size"`
 	}
 	var p param
 	if err := c.Bind(&p); err != nil {

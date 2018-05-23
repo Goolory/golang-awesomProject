@@ -1,18 +1,18 @@
 package cmn
 
 import (
-	"github.com/gin-gonic/gin"
-	"awesomeProject/tool/logger"
-	"github.com/jinzhu/gorm"
-	"awesomeProject/dbmodel"
-	"net/http"
 	"awesomeProject/constant"
+	"awesomeProject/dbmodel"
+	"awesomeProject/tool/logger"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"net/http"
 )
 
-func StudentAnswerAddHandler(c *gin.Context)  {
+func StudentAnswerAddHandler(c *gin.Context) {
 	type param struct {
 		QuestionId uint32 `json:"question_id"`
-		Content string `json:"content"`
+		Content    string `json:"content"`
 	}
 	var p param
 	if err := c.BindJSON(&p); err != nil {
@@ -40,16 +40,16 @@ func StudentAnswerAddHandler(c *gin.Context)  {
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success})
 }
 
-type answerStudent struct{
+type answerStudent struct {
 	dbmodel.Answer
 	Username string `json:"username"`
 }
 
-func TeacherAnswerListHandler(c *gin.Context)  {
+func TeacherAnswerListHandler(c *gin.Context) {
 	type param struct {
 		QuestionId uint32 `form:"question_id"`
-		Page uint32 `form:"page"`
-		PageSize uint32 `form:"page_size"`
+		Page       uint32 `form:"page"`
+		PageSize   uint32 `form:"page_size"`
 	}
 	var p param
 	if err := c.Bind(&p); err != nil {
@@ -64,7 +64,7 @@ func TeacherAnswerListHandler(c *gin.Context)  {
 	count := 0
 	sql := db.Where("1=1")
 
-	sql = sql.Where("question_id = ?",p.QuestionId)
+	sql = sql.Where("question_id = ?", p.QuestionId)
 	if err := sql.Table("answer").Count(&count).Error; err != nil {
 		logger.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)

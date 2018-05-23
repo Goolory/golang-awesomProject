@@ -1,32 +1,31 @@
 package cmn
 
 import (
-	"github.com/gin-gonic/gin"
-	"awesomeProject/tool/logger"
 	"awesomeProject/constant"
+	"awesomeProject/dbmodel"
+	"awesomeProject/tool/logger"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"net/http"
-	"awesomeProject/dbmodel"
 )
 
-
-func TeacherCommentListHandler(c *gin.Context)  {
+func TeacherCommentListHandler(c *gin.Context) {
 	StudentCommentListHandler(c)
 }
 
-func TeacherCommentAddHandler(c *gin.Context)  {
+func TeacherCommentAddHandler(c *gin.Context) {
 	user := c.MustGet(constant.ContextTeacher).(dbmodel.Teacher)
 	addComment(c, user.Id, user.TeacherName.String)
 }
 
-func StudentCommentAddHandler(c *gin.Context)  {
+func StudentCommentAddHandler(c *gin.Context) {
 
 	user := c.MustGet(constant.ContextStudent).(dbmodel.User)
 	addComment(c, user.Id, user.Username.String)
 
 }
 
-func addComment(c *gin.Context, userId uint32, publisher string)  {
+func addComment(c *gin.Context, userId uint32, publisher string) {
 	type param struct {
 		ThemeId uint32 `json:"theme_id"`
 		Content string `json:"content"`
@@ -56,7 +55,7 @@ func addComment(c *gin.Context, userId uint32, publisher string)  {
 
 }
 
-func AdminCommentDelHandler(c *gin.Context)  {
+func AdminCommentDelHandler(c *gin.Context) {
 	type param struct {
 		Id uint32 `json:"id"`
 	}
@@ -76,14 +75,14 @@ func AdminCommentDelHandler(c *gin.Context)  {
 	}
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success})
 }
-func AdminCommentListHandler(c *gin.Context)  {
+func AdminCommentListHandler(c *gin.Context) {
 	StudentCommentListHandler(c)
 }
 
 func StudentCommentListHandler(c *gin.Context) {
 	type param struct {
-		ThemeId uint32 `form:"theme_id"`
-		Page uint32 `form:"page"`
+		ThemeId  uint32 `form:"theme_id"`
+		Page     uint32 `form:"page"`
 		PageSize uint32 `form:"page_size"`
 	}
 	var p param
@@ -100,7 +99,7 @@ func StudentCommentListHandler(c *gin.Context) {
 
 	sql := db.Where("1=1")
 
-	sql = sql.Where("theme_id = ?",p.ThemeId)
+	sql = sql.Where("theme_id = ?", p.ThemeId)
 	if err := sql.Table("comment").Count(&count).Error; err != nil {
 		logger.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -121,6 +120,5 @@ func StudentCommentListHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"comments": cList, "total": count}})
-
 
 }

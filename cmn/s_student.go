@@ -38,7 +38,6 @@ func StudentLoginHandler(c *gin.Context) {
 		StudentNo string `json:"student_no"`
 		Password  string `json:"password"`
 	}
-
 	var p param
 	if err := c.Bind(&p); err != nil {
 		logger.Info("Invalid request param", err)
@@ -51,7 +50,6 @@ func StudentLoginHandler(c *gin.Context) {
 		return
 	}
 	db := c.MustGet(constant.ContextDb).(*gorm.DB)
-
 	var student dbmodel.User
 	if erradmin := db.Where("`student_no` = ?", p.StudentNo).First(&student).Error; erradmin != nil {
 		if erradmin == gorm.ErrRecordNotFound {
@@ -68,13 +66,11 @@ func StudentLoginHandler(c *gin.Context) {
 		constant.ErrMsg(c, constant.WrongPassword)
 		return
 	}
-
 	token, err := generaterTonkeS(&student, db)
 	if err != nil {
 		logger.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
-
 	c.JSON(http.StatusOK, gin.H{"err_code": constant.Success, "data": map[string]interface{}{"access_token": token.AccessToken}})
 }
 

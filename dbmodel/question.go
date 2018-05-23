@@ -6,14 +6,13 @@ import (
 )
 
 type Question struct {
-	Id          uint32     `gorm:"primary_key; auto_increment" json:"id"`
-	Title string `json:"title"`
-	Content string `json:"content"`
-	TeacherId uint32 `json:"teacher_id"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
+	Id        uint32    `gorm:"primary_key; auto_increment" json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	TeacherId uint32    `json:"teacher_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
-
 
 func (Question) TableName() string {
 	return "question"
